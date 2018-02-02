@@ -7,10 +7,8 @@
 //
 // This module calculates the Nth term of Fibonacci/triangle sequence given
 // some initial data value. The input data (data_in) and Nth term desired
-// (order) should be provided ON THE SAME CYCLE that 'load' signal goes high
-// (i.e. data_in, order, and load are ALL latched on the same rising clock edge).
-// This is in accordance with the project spec... do not provide them on the
-// following cycle!
+// (order) should be provided ON THE CYCLE AFTER 'load' signal goes high
+// (i.e. data_in & order are latched on the clock edge after 'load' goes high).
 //
 // 'load' needs to be asserted for 2 cycles, while the other inputs (data_in, 
 // order, fibonacci, triangle) only need to be provided for 1 cycle. 
@@ -133,13 +131,13 @@ module sequence_gen (
 
 			LOAD_TRI : begin
 				if (!load) next = IDLE;
-				else if (~|reg_order) next = ERROR;
+				else if (~|order) next = ERROR;
 				else next = TRI_ADD;
 			end
 
 			LOAD_FIB : begin
 				if (!load) next = IDLE;
-				else if ((~|reg_order) || (~|reg_data_in)) next = ERROR;
+				else if ((~|order) || (~|data_in)) next = ERROR;
 				else next = FIB_ADD;
 			end
 
@@ -198,12 +196,20 @@ module sequence_gen (
 
 			IDLE : begin
 
+				count <= '0;
+				reg_data_in <= '0;
+				reg_order <= '0;
+				nbit_op_a <= '0;
+				nbit_op_b <= '0;
+
+			end // IDLE
+
+			LOAD_TRI, LOAD_FIB : begin
+
 				reg_data_in <= data_in;
 				reg_order <= order;
 
-				count <= '0;
-
-			end // IDLE
+			end // LOAD_TRI, LOAD_FIB
 
 			TRI_ADD : begin
 

@@ -81,7 +81,7 @@ module sequence_gen_test
          // Randomly generate order and data_in
          int_order = ({$random} % 8'hff);
          int_data = ({$random} % 8'hff);
-         $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, order);
+         $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, int_order);
 
          // Wait until either done, error or overflow flag is set
          while (done == 0 && error == 0 && overflow == 0) @(posedge clk);
@@ -122,7 +122,7 @@ module sequence_gen_test
          // Randomly generate order and data_in
          int_order = ({$random} % 8'hff);
          int_data = ({$random} % 8'hff);
-         $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, order);
+         $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, int_order);
 
          // Wait for some random number of cycles and assert reset
          rst_delay = ({$random} % 8'hff);

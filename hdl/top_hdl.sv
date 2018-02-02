@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 `include "definitions.sv"
-`include "../tb/sequence_gen_test.v"
+`include "../tb/sequence_gen_test_lab2.v"
 
 module top_hdl();
 
