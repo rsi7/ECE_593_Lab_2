@@ -62,7 +62,7 @@ module sequence_gen_test
       int_data = 8'h00;
 
       # RESET_DURATION int_reset_n = 1;
-      $display ("\n@ %0d ns The chip is out of reset", $time);
+      $display ("@ %0d ns The chip is out of reset", $time);
 
       repeat (10)  @(posedge clk);
 
@@ -88,7 +88,7 @@ module sequence_gen_test
 
          // Wait for a extra cycle for overflow case - this is implementation specific. You might not need that
          if (overflow) repeat (1)  @(posedge clk);
-         $display ("@ %0d ns: Result: %0d. Overflow bit: %h. Error bit: %h\n", $time, data_out, overflow, error);
+         $display ("@ %0d ns: Result: %0d. Overflow bit: %h. Error bit: %h", $time, data_out, overflow, error);
 
          // In case of error or overflow, wait for a few cycle and set clear
          if (error == 1 || overflow == 1) begin

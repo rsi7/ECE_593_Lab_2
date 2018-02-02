@@ -90,6 +90,28 @@ module top_hdl();
 
 	);
 
+	//////////////////
+	// seq_gen_chkr //
+	//////////////////
+
+	seq_gen_chkr i_seq_gen_chkr (
+
+		.clk      		(clk),			// I [0] clock signal
+		.reset_n  		(reset_n),		// I [0] active-low reset
+		.fibonacci		(fibonacci),	// I [0] mode: perform fibonacci calculation
+		.triangle 		(triangle),		// I [0] mode: perform triangle calculation
+		.load     		(load),			// I [0] active (2 cycles) --> load data into FSM
+		.clear    		(clear),		// I [0] clear results off 'data_out' bus
+		.order    		(order),		// I [15:0] calculate the Nth value of the sequence
+		.data_in  		(data_in),		// I [63:0] initial value of the sequence
+
+		.done     		(done),			// I [0] active (1 cycle) --> data is ready
+		.data_out 		(data_out),		// I [63:0] calculated value of the sequence
+		.overflow 		(overflow),		// I [0] calculation exceeds bus max
+		.error    		(error)			// I [0] indicates bad control input or bad data
+
+	);
+
 	/************************************************************************/
 	/* initial block : clk													*/
 	/************************************************************************/
