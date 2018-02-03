@@ -117,6 +117,20 @@ module seq_gen_chkr (
 
 	always@(posedge load) begin
 
+		// synchronize 'load' to clock'
+		@(posedge clk);
+
+		// wait a half-cycle for combinational logic to propagate
+		#(0.5*CLK_CYCLE);
+
+		// check for X or Z bits with reduction XOR operator
+		if ((^data_in === 1'bx) || (^order === 1'bx)) begin
+			$display("@ %0d ns: Checker Rule #2 Fail: Unknown bits (x or z) on input busses!",$time);
+		end
+
+		else begin
+			$display("@ %0d ns: Checker Rule #2 Pass: Valid bits (1's and 0's) on input busses!",$time);
+		end
 
 	end // always@(posedge load)
 
@@ -194,6 +208,18 @@ module seq_gen_chkr (
 
 	always@(posedge error) begin
 
+		// wait a half-cycle for combinational logic to propagate
+		#(0.5*CLK_CYCLE);
+
+		// check for unknown results in reduction OR and NOR
+		if ((|data_out === 1'bx) && (~|data_out === 1'bx)) begin
+			$display("@ %0d ns: Checker Rule #6 Pass: Error creates 'x' bits on 'data_out' bus!",$time);
+		end
+
+		else begin
+			$display("@ %0d ns: Checker Rule #6 Fail: Error did not create 'x' bits on 'data_out' bus!",$time);
+		end
+
 	end // always@(posedge error)
 
 	/*************************************************************************/
@@ -216,8 +242,8 @@ module seq_gen_chkr (
 			// running two parallel hardware threads and see which finishes first
 			// winner will disable the losing thread
 			begin: cycle_counter
-
-				repeat (order+2) @(posedge clk);
+				repeat (order+3) @(posedge clk);
+				#(0.5*CLK_CYCLE);
 				$display("@ %0d ns: Checker Rule #7 Fail: 'data_out' not asserted within <order+2> cycles of input!",$time);
 				disable check_for_results;
 			end
