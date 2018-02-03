@@ -50,6 +50,9 @@ module sequence_gen_test
    reg [3:0] err_delay;
    reg [3:0] rst_delay;
 
+   parameter   BUG_ENABLE_2   = 1'b0;
+   parameter   BUG_ENABLE_3   = 1'b0;
+
    initial begin
 
       // Generate one-time internal reset signal
@@ -76,11 +79,14 @@ module sequence_gen_test
          // Set load
          int_load = 1;
          int_fibonacci = 1;
+
+         if (BUG_ENABLE_3) int_triangle = 1'b1;
+
          repeat (1)  @(posedge clk);
 
          // Randomly generate order and data_in
-         int_order = ({$random} % 8'hff);
-         int_data = ({$random} % 8'hff);
+         int_order = (BUG_ENABLE_2) ? 'x : ({$random} % 8'hff);
+         int_data = (BUG_ENABLE_2) ? 'x : ({$random} % 8'hff);
          $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, int_order);
 
          // Wait until either done, error or overflow flag is set
@@ -120,8 +126,8 @@ module sequence_gen_test
          repeat (1)  @(posedge clk);
 
          // Randomly generate order and data_in
-         int_order = ({$random} % 8'hff);
-         int_data = ({$random} % 8'hff);
+         int_order = (BUG_ENABLE_2) ? 'x : ({$random} % 8'hff);
+         int_data = (BUG_ENABLE_2) ? 'x : ({$random} % 8'hff);
          $display ("@ %0d ns: Test sequence: %0d: Initial data= %0d. Fibonacci order= %0d ", $time, test_seq, int_data, int_order);
 
          // Wait for some random number of cycles and assert reset

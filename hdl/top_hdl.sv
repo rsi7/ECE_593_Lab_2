@@ -50,7 +50,14 @@ module top_hdl();
 	// sequence_gen //
 	//////////////////
 
-	sequence_gen i_sequence_gen (
+	sequence_gen #(
+
+		.BUG_ENABLE_1	(1'b0),			// enables bug for checker rule 1
+		.BUG_ENABLE_4	(1'b0),			// enables bug for checker rule 4
+		.BUG_ENABLE_5	(1'b0),			// enables bug for checker rule 5
+		.BUG_ENABLE_6	(1'b0))			// enables bug for checker rule 6
+
+		i_sequence_gen (
 
 		.clk      		(clk),			// I [0] clock signal
 		.reset_n  		(reset_n),		// I [0] active-low reset
@@ -72,7 +79,12 @@ module top_hdl();
 	// sequence_gen_test //
 	///////////////////////
 
-	sequence_gen_test i_sequence_gen_test (
+	sequence_gen_test #(
+
+		.BUG_ENABLE_2	(1'b0),			// enables bug for checker rule 2
+		.BUG_ENABLE_3	(1'b0))			// enables bug for checker rule 3
+
+	i_sequence_gen_test (
 
 		.clk      		(clk),			// I [0] clock signal
 		.done     		(done),			// I [0] active (1 cycle) --> data is ready
@@ -96,13 +108,13 @@ module top_hdl();
 
 	seq_gen_chkr #(
 
-		.CHKR_RULE_1	(1'b0),		// reset_n asserts -> all outputs are 0 within 1 cycle
-		.CHKR_RULE_2	(1'b0),		// load asserts -> valid 'data_in' and 'order' bits
-		.CHKR_RULE_3	(1'b0),		// load asserts -> either 'fibonacci' or 'triangle' active on same cycle
-		.CHKR_RULE_4	(1'b0),		// done asserts -> 'data_out' correct on same cycle
-		.CHKR_RULE_5	(1'b0),		// overflow asserts -> 'data_out' all 1's on same cycle
-		.CHKR_RULE_6	(1'b0),		// error asserts -> 'data_out' all X's on same cycle
-		.CHKR_RULE_7	(1'b0)) 	// load asserts -> 'done' and 'data_out' within <order+2> cycles
+		.CHKR_RULE_1	(1'b1),		// reset_n asserts -> all outputs are 0 within 1 cycle
+		.CHKR_RULE_2	(1'b1),		// load asserts -> valid 'data_in' and 'order' bits
+		.CHKR_RULE_3	(1'b1),		// load asserts -> either 'fibonacci' or 'triangle' active on same cycle
+		.CHKR_RULE_4	(1'b1),		// done asserts -> 'data_out' correct on same cycle
+		.CHKR_RULE_5	(1'b1),		// overflow asserts -> 'data_out' all 1's on same cycle
+		.CHKR_RULE_6	(1'b1),		// error asserts -> 'data_out' all X's on same cycle
+		.CHKR_RULE_7	(1'b1)) 	// load asserts -> 'done' and 'data_out' within <order+2> cycles
 
 	i_seq_gen_chkr (
 

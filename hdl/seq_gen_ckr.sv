@@ -73,13 +73,13 @@ module seq_gen_chkr (
 	/* Parameters and variables												 */
 	/*************************************************************************/
 
-	parameter	CHKR_RULE_1 = 1'b1;
-	parameter	CHKR_RULE_2 = 1'b1;
-	parameter	CHKR_RULE_3 = 1'b1;
-	parameter	CHKR_RULE_4 = 1'b1;
-	parameter	CHKR_RULE_5 = 1'b1;
-	parameter	CHKR_RULE_6 = 1'b1;
-	parameter	CHKR_RULE_7 = 1'b1;
+	parameter	CHKR_RULE_1 = 1'b0;
+	parameter	CHKR_RULE_2 = 1'b0;
+	parameter	CHKR_RULE_3 = 1'b0;
+	parameter	CHKR_RULE_4 = 1'b0;
+	parameter	CHKR_RULE_5 = 1'b0;
+	parameter	CHKR_RULE_6 = 1'b0;
+	parameter	CHKR_RULE_7 = 1'b0;
 
 	parameter	CLK_CYCLE = 10;
 

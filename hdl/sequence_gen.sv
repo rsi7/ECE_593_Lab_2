@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 `include "definitions.sv"
+`timescale 1ns/1ps
 
 module sequence_gen (
 
@@ -74,6 +75,13 @@ module sequence_gen (
 	ulogic64	reg_data_in;
 	ulogic64	reg_order;
 
+	//
+
+	parameter	BUG_ENABLE_1 = 1'b0;
+	parameter	BUG_ENABLE_4 = 1'b0;
+	parameter	BUG_ENABLE_5 = 1'b0;	
+	parameter	BUG_ENABLE_6 = 1'b0;
+
 	/************************************************************************/
 	/* Module instantiations												*/
 	/************************************************************************/
@@ -111,22 +119,28 @@ module sequence_gen (
 
 	always_comb begin
 
-		done = 1'b0;
-		data_out = '0;
-		overflow = 1'b0;
-		error = 1'b0;
-
 		case (state)
 
 			RESET : begin
 				if (!reset_n) next = RESET;
 				else next = IDLE;
+
+				done = (BUG_ENABLE_1) ? 1'bx : 1'b0;
+				data_out = (BUG_ENABLE_1) ? 'x : '0;
+				overflow = (BUG_ENABLE_1) ? 1'bx : 1'b0;
+				error = (BUG_ENABLE_1) ? 1'bx : 1'b0;
+
 			end
 
 			IDLE : begin
 				if (load && triangle) next = LOAD_TRI;
 				else if (load && fibonacci) next = LOAD_FIB;
 				else next = IDLE;
+
+				done = 1'b0;
+				data_out = '0;
+				overflow = 1'b0;
+				error = 1'b0;
 			end
 
 			LOAD_TRI : begin
@@ -142,10 +156,12 @@ module sequence_gen (
 			end
 
 			ERROR : begin
-				error = 1'b1;
-				data_out = 'x;
 				if (clear) next = IDLE;
 				else next = ERROR;
+
+				error = 1'b1;
+				data_out = (BUG_ENABLE_6) ? '0 : 'x;
+
 			end
 
 			TRI_ADD : begin
@@ -162,15 +178,18 @@ module sequence_gen (
 
 			DONE : begin
 				next = IDLE;
+
 				done = 1'b1;
-				data_out = nbit_sum;
+				data_out = (BUG_ENABLE_4) ? 'x : nbit_sum;
+
 			end
 
 			OVRFLOW : begin
-				overflow = 1'b1;
-				data_out = '1;
 				if (clear) next = IDLE;
 				else next = OVRFLOW;
+
+				overflow = 1'b1;
+				data_out = (BUG_ENABLE_5) ? 'x : '1;
 			end
 
 		endcase // state
