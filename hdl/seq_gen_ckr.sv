@@ -91,20 +91,24 @@ module seq_gen_chkr (
 
 	always@(negedge reset_n) begin
 
-		// synchronize 'reset_n' to clock
-		@(posedge clk);
+		if (CHKR_RULE_1) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+			// synchronize 'reset_n' to clock
+			@(posedge clk);
 
-		// check all four outputs are zero
-		if ((!done) && (!overflow) && (!error) && (~|data_out)) begin
-			$display("@ %0d ns: Checker Rule #1 Pass: Outputs cleared within 1 cycle of reset!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #1 Fail: Outputs not cleared within 1 cycle of reset!", $time);
-		end
+			// check all four outputs are zero
+			if ((!done) && (!overflow) && (!error) && (~|data_out)) begin
+				$display("@ %0d ns: Checker Rule #1 Pass: Outputs cleared within 1 cycle of reset!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #1 Fail: Outputs not cleared within 1 cycle of reset!", $time);
+			end
+
+		end // CHKR_RULE_1
 
 	end // always@(negedge reset_n)
 
@@ -117,20 +121,24 @@ module seq_gen_chkr (
 
 	always@(posedge load) begin
 
-		// synchronize 'load' to clock'
-		@(posedge clk);
+		if (CHKR_RULE_2) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+			// synchronize 'load' to clock'
+			@(posedge clk);
 
-		// check for X or Z bits with reduction XOR operator
-		if ((^data_in === 1'bx) || (^order === 1'bx)) begin
-			$display("@ %0d ns: Checker Rule #2 Fail: Unknown bits (x or z) on input busses!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #2 Pass: Valid bits (1's and 0's) on input busses!",$time);
-		end
+			// check for X or Z bits with reduction XOR operator
+			if ((^data_in === 1'bx) || (^order === 1'bx)) begin
+				$display("@ %0d ns: Checker Rule #2 Fail: Unknown bits (x or z) on input busses!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #2 Pass: Valid bits (1's and 0's) on input busses!",$time);
+			end
+
+		end // CHKR_RULE_2
 
 	end // always@(posedge load)
 
@@ -143,17 +151,21 @@ module seq_gen_chkr (
 
 	always@(posedge load) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+		if (CHKR_RULE_3) begin
 
-		// check fibonacci xor triangle is asserted
-		if (fibonacci ^ triangle) begin
-			$display("@ %0d ns: Checker Rule #3 Pass: Input 'mode' correctly applied!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #3 Fail: Input 'mode' not correctly applied!", $time);
-		end
+			// check fibonacci xor triangle is asserted
+			if (fibonacci ^ triangle) begin
+				$display("@ %0d ns: Checker Rule #3 Pass: Input 'mode' correctly applied!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #3 Fail: Input 'mode' not correctly applied!", $time);
+			end
+
+		end // CHKR_RULE_3
 
 	end // always@(posedge load)
 
@@ -165,17 +177,21 @@ module seq_gen_chkr (
 
 	always@(posedge done) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+		if (CHKR_RULE_4) begin
 
-		// check if 'data_out' is non-zero
-		if (|data_out) begin
-			$display("@ %0d ns: Checker Rule #4 Pass: Output data is non-zero after calculation!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #4 Fail: Output data is zero after calculation!",$time);
-		end
+			// check if 'data_out' is non-zero
+			if (|data_out) begin
+				$display("@ %0d ns: Checker Rule #4 Pass: Output data is non-zero after calculation!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #4 Fail: Output data is zero after calculation!",$time);
+			end
+
+		end // CHKR_RULE_4
 
 	end // always@(posedge done)
 
@@ -187,16 +203,20 @@ module seq_gen_chkr (
 
 	always@(posedge overflow) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+		if (CHKR_RULE_5) begin
 
-		if (&data_out) begin
-			$display("@ %0d ns: Checker Rule #5 Pass: Overflow sets 'data_out' to all 1's!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #5 Fail: Overflow did not set 'data_out' to all 1's!",$time);
-		end
+			if (&data_out) begin
+				$display("@ %0d ns: Checker Rule #5 Pass: Overflow sets 'data_out' to all 1's!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #5 Fail: Overflow did not set 'data_out' to all 1's!",$time);
+			end
+
+		end // CHKR_RULE_5
 
 	end // always@(posedge overflow)
 
@@ -208,17 +228,21 @@ module seq_gen_chkr (
 
 	always@(posedge error) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+		if (CHKR_RULE_6) begin
 
-		// check for unknown results in reduction OR and NOR
-		if ((|data_out === 1'bx) && (~|data_out === 1'bx)) begin
-			$display("@ %0d ns: Checker Rule #6 Pass: Error creates 'x' bits on 'data_out' bus!",$time);
-		end
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-		else begin
-			$display("@ %0d ns: Checker Rule #6 Fail: Error did not create 'x' bits on 'data_out' bus!",$time);
-		end
+			// check for unknown results in reduction OR and NOR
+			if ((|data_out === 1'bx) && (~|data_out === 1'bx)) begin
+				$display("@ %0d ns: Checker Rule #6 Pass: Error creates 'x' bits on 'data_out' bus!",$time);
+			end
+
+			else begin
+				$display("@ %0d ns: Checker Rule #6 Fail: Error did not create 'x' bits on 'data_out' bus!",$time);
+			end
+
+		end // CHKR_RULE_6
 
 	end // always@(posedge error)
 
@@ -231,30 +255,34 @@ module seq_gen_chkr (
 
 	always@(posedge load) begin
 
-		// synchronize 'load' to clock
-		@(posedge clk);
+		if (CHKR_RULE_7) begin
 
-		// wait a half-cycle for combinational logic to propagate
-		#(0.5*CLK_CYCLE);
+			// synchronize 'load' to clock
+			@(posedge clk);
 
-		fork: check_output_timing
+			// wait a half-cycle for combinational logic to propagate
+			#(0.5*CLK_CYCLE);
 
-			// running two parallel hardware threads and see which finishes first
-			// winner will disable the losing thread
-			begin: cycle_counter
-				repeat (order+3) @(posedge clk);
-				#(0.5*CLK_CYCLE);
-				$display("@ %0d ns: Checker Rule #7 Fail: 'data_out' not asserted within <order+2> cycles of input!",$time);
-				disable check_for_results;
-			end
+			fork: check_output_timing
 
-			begin: check_for_results
-				@(data_out);
-				$display("@ %0d ns: Checker Rule #7 Pass: 'data_out' asserted within <order+2> cycles of input!",$time);
-				disable cycle_counter;
-			end
+				// running two parallel hardware threads and see which finishes first
+				// winner will disable the losing thread
+				begin: cycle_counter
+					repeat (order+3) @(posedge clk);
+					#(0.5*CLK_CYCLE);
+					$display("@ %0d ns: Checker Rule #7 Fail: 'data_out' not asserted within <order+2> cycles of input!",$time);
+					disable check_for_results;
+				end
 
-		join: check_output_timing
+				begin: check_for_results
+					@(data_out);
+					$display("@ %0d ns: Checker Rule #7 Pass: 'data_out' asserted within <order+2> cycles of input!",$time);
+					disable cycle_counter;
+				end
+
+			join: check_output_timing
+
+		end // CHKR_RULE_7
 
 	end // always@(posedge load)
 

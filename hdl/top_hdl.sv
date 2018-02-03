@@ -94,7 +94,17 @@ module top_hdl();
 	// seq_gen_chkr //
 	//////////////////
 
-	seq_gen_chkr i_seq_gen_chkr (
+	seq_gen_chkr #(
+
+		.CHKR_RULE_1	(1'b0),		// reset_n asserts -> all outputs are 0 within 1 cycle
+		.CHKR_RULE_2	(1'b0),		// load asserts -> valid 'data_in' and 'order' bits
+		.CHKR_RULE_3	(1'b0),		// load asserts -> either 'fibonacci' or 'triangle' active on same cycle
+		.CHKR_RULE_4	(1'b0),		// done asserts -> 'data_out' correct on same cycle
+		.CHKR_RULE_5	(1'b0),		// overflow asserts -> 'data_out' all 1's on same cycle
+		.CHKR_RULE_6	(1'b0),		// error asserts -> 'data_out' all X's on same cycle
+		.CHKR_RULE_7	(1'b0)) 	// load asserts -> 'done' and 'data_out' within <order+2> cycles
+
+	i_seq_gen_chkr (
 
 		.clk      		(clk),			// I [0] clock signal
 		.reset_n  		(reset_n),		// I [0] active-low reset
